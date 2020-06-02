@@ -1,0 +1,75 @@
+import kotlin.KotlinVersion
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.example.kotlinapp"
+        minSdkVersion 26
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // solves error:
+    // Cannot inline bytecode built with JVM target 1.8
+    // into bytecode that is being built with JVM target 1.6
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+}
+
+dependencies {
+
+    def gson_version = "2.8.6"
+    def retrofit2_version = "2.6.1"
+    def okhttp3_version = "4.7.2"
+    def kotlinCoroutine_version = "1.3.7"
+    def picasso_version = "2.71828"
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // Gson support
+    implementation "com.google.code.gson:gson:$gson_version"
+
+    // Picasso Image loading library support
+    implementation "com.squareup.picasso:picasso:$picasso_version"
+
+    // Kotlin coroutines support
+    //implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutine_version"
+
+    // OKhttp3 support
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+
+    // Okio support since retrofit may rely on this
+    implementation("com.squareup.okio:okio:2.6.0")
+
+    // Retrofit2 support / JSON converter (newer versions dont like kotlin?)
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+
+}
